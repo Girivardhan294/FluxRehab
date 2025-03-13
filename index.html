@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flux Rehab - Physiotherapy</title>
+    <style>
+        /* General Styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #e6f0ff;
+            color: #2c3e50;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            background: white;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 1000;
+            color: #2c3e50;
+        }
+
+        .logo {
+            width: 80px;
+            height: auto;
+            margin-left: 20px;
+            border-radius: 10px;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: translateY(-5px);
+            box-shadow: 8px 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .header h2 {
+            margin-left: 30px;
+            color: #2c3e50;
+        }
+
+        .floating-images {
+            margin-top: 120px;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .floating-images img {
+            width: 100vw;
+            height: 60vh;
+            object-fit: contain;
+            display: none;
+        }
+
+        .floating-images img.active {
+            display: block;
+            margin: 0 auto;
+        }
+
+        .content {
+            padding: 20px;
+            text-align: center;
+            background-color: #ffffff;
+            margin: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .pdf-section {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            padding: 20px;
+            max-width: 900px;
+            margin: 20px auto;
+        }
+
+        .pdf-box {
+            background: #ffffff;
+            color: #2c3e50;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+            height: 250px;
+            overflow: hidden;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .pdf-box h3 {
+            margin: 0;
+            font-size: 24px;
+            color: #2980b9;
+        }
+
+        .pdf-box p {
+            font-size: 16px;
+            margin-top: 10px;
+            color: #666;
+        }
+
+        .pdf-box .conditions {
+            display: none;
+            margin-top: 10px;
+            font-size: 14px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: left;
+            background-color: #f0f7ff;
+            color: #333;
+        }
+
+        .pdf-box.expanded {
+            height: auto;
+        }
+
+        .pdf-box.expanded .conditions {
+            display: block;
+        }
+
+        .pdf-box .conditions ul {
+            list-style: disc;
+            padding-left: 20px;
+        }
+
+        .pdf-box .conditions ul li {
+            margin: 5px 0;
+        }
+
+        /* Services Section */
+        .services-section {
+            background-color: #ffffff;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .services-list {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .services-list h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .services-list ul {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .services-list ul li {
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            font-size: 18px;
+            color: #333;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .services-list ul li:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Contact Section */
+        .contact-section {
+            background-color: #2c3e50;
+            color: #ffffff;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .contact-info a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: color 0.3s ease;
+        }
+
+        .contact-info a:hover {
+            color: #2980b9;
+        }
+
+        .branding {
+            margin-top: 20px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .branding .slogan {
+            font-size: 18px;
+            font-weight: normal;
+            margin-top: 10px;
+            color: #bdc3c7;
+        }
+
+        /* Slider Section */
+        .slider-section {
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .slider {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        .slides {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .slide {
+            min-width: 100%;
+            box-sizing: border-box;
+        }
+
+        .slide img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .slider-controls {
+            margin-top: 10px;
+        }
+
+        .slider-controls button {
+            background-color: #2980b9;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .slider-controls button:hover {
+            background-color: #1c5980;
+        }
+
+        /* Dr. Rekha Chitrada Profile Section */
+        .profile-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 40px 0;
+        }
+
+        .profile {
+            display: flex;
+            width: 60%;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .profile-image {
+            flex: 1;
+        }
+
+        .profile-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-info {
+            flex: 1;
+            padding: 20px;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 1s ease-in-out;
+        }
+
+        .profile-info.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .profile-info h2 {
+            color: #333;
+        }
+
+        .profile-info p {
+            margin: 10px 0;
+            line-height: 1.5;
+        }
+
+        .profile-info ul {
+            margin-left: 20px;
+        }
+
+        /* Media Queries for Mobile Devices */
+        @media (max-width: 768px) {
+            .header h2 {
+                font-size: 18px;
+                margin-left: 10px;
+            }
+
+            .logo {
+                width: 60px;
+                margin-left: 10px;
+            }
+
+            .floating-images img {
+                height: 40vh;
+            }
+
+            .pdf-section {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 10px;
+            }
+
+            .pdf-box {
+                height: auto;
+                padding: 20px;
+            }
+
+            .services-list ul {
+                grid-template-columns: 1fr;
+            }
+
+            .profile {
+                flex-direction: column;
+                width: 90%;
+            }
+
+            .profile-image img {
+                height: 300px;
+            }
+
+            .profile-info {
+                padding: 15px;
+            }
+
+            .slider {
+                max-width: 100%;
+                height: auto;
+            }
+
+            .slide {
+                min-width: 100%;
+                width: 100%;
+            }
+
+            .slider-controls button {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+        }
+    </style>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="header">
+        <img src="image.png" class="logo" alt="Flux Rehab Logo">
+        <h2>Flux Rehab - Physiotherapy</h2>
+    </div>
+    
+    <div class="floating-images">
+        <img src="image copy.png" alt="Image 1" class="active">
+        <img src="image copy 2.png" alt="Image 2">
+    </div>
+
+    <div class="content">
+        <h1>Expert Rehabilitation Services</h1>
+        <p>Specialized treatments for various conditions</p>
+    </div>
+
+    <div class="pdf-section" id="pdf-section"></div>
+
+    <!-- Slider Section -->
+    <div class="slider-section">
+        <div class="slider">
+            <div class="slides">
+                <div class="slide">
+                    <img src="image copy 10.png" alt="Slide 3">
+                </div>
+                <div class="slide">
+                    <img src="image copy 3.png" alt="Slide 4">
+                </div>
+                <div class="slide">
+                    <img src="image copy 4.png" alt="Slide 5">
+                </div>
+                <div class="slide">
+                    <img src="image copy 5.png" alt="Slide 6">
+                </div>
+                <div class="slide">
+                    <img src="image copy 9.png" alt="Slide 10">
+                </div>
+                <div class="slide">
+                    <img src="image copy 10.png" alt="Slide 11">
+                </div>
+            </div>
+            <div class="slider-controls">
+                <button class="prev-slide">Previous</button>
+                <button class="next-slide">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dr. Rekha Chitrada Profile Section -->
+    <div class="profile-container">
+        <div class="profile">
+            <div class="profile-image">
+                <img src="WhatsApp Image 2025-03-11 at 10.23.03.jpeg" alt="Dr. Rekha Chitrada">
+            </div>
+            <div class="profile-info" id="profile-info">
+                <h2>Dr. Rekha Chitrada</h2>
+                <p><strong>Designation:</strong> Physiotherapist & Rehabilitation Expert</p>
+                <p><strong>Qualifications:</strong></p>
+                <ul>
+                    <li>Bachelor of Physiotherapy (BPT)</li>
+                    <li>Master of Physiotherapy (MPT)</li>
+                    <li>Certified Instrument Assisted Soft Tissue Mobilisation Therapist (CIASTMT)</li>
+                    <li>Certified Manual Therapist (CMT)</li>
+                </ul>
+                <p><strong>Awards and Honors:</strong></p>
+                <ul>
+                    <li>Recipient of prestigious "Young Achiever Award"</li>
+                    <li>Achieved Distinction in Anatomy and Physiology during BPT first year</li>
+                    <li>Outstanding performance in MPT program</li>
+                </ul>
+                <p><strong>Research and Publications:</strong></p>
+                <ul>
+                    <li>Published 6 research papers in renowned journals</li>
+                    <li>Presented research at:</li>
+                    <ul>
+                        <li>2 International Conferences</li>
+                        <li>2 National Conferences</li>
+                    </ul>
+                </ul>
+                <p><strong>About Dr. Rekha Chitrada:</strong></p>
+                <p>A highly acclaimed physiotherapist with exceptional academic records and research contributions. Specializes in pediatric management, rehabilitation, and manual therapy.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Services Section -->
+    <div class="services-section">
+        <div class="services-list">
+            <h2>Our Services</h2>
+            <ul>
+                <li>Pediatric Physiotherapy</li>
+                <li>Sports Injury Rehabilitation</li>
+                <li>Hand Therapy</li>
+                <li>Cardiac Rehabilitation</li>
+                <li>Geriatric Physiotherapy</li>
+                <li>Neurological Rehabilitation</li>
+                <li>Obstetric & Gynecological Physiotherapy</li>
+                <li>Orthopedic Rehabilitation</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Contact Section -->
+    <div class="contact-section">
+        <div class="contact-info">
+            <a href="https://www.facebook.com/profile.php?id=61571088871143" target="_blank">
+                <i class="fab fa-facebook"></i> Facebook
+            </a>
+            <a href="https://www.instagram.com/flux__rehab?igsh=MTMweGdlZWJtN3c1Nw%3D%3D&utm_source=qr" target="_blank">
+                <i class="fab fa-instagram"></i> Instagram
+            </a>
+            <a href="https://youtube.com/@Fluxrehab" target="_blank">
+                <i class="fab fa-youtube"></i> YouTube
+            </a>
+            <a href="mailto:drchitradarekha@gmail.com">
+                <i class="fas fa-envelope"></i> Email
+            </a>
+            <a href="tel:+918985381362">
+                <i class="fas fa-phone"></i> Contact
+            </a>
+        </div>
+        <div class="branding">
+            <div>FLUX REHAB</div>
+            <div class="slogan">Rehabilitation for better living</div>
+        </div>
+    </div>
+
+    <script>
+        // Image transition logic for floating images
+        const images = document.querySelectorAll('.floating-images img');
+        let currentIndex = 0;
+
+        function showNextImage() {
+            images[currentIndex].classList.remove('active');
+            currentIndex = (currentIndex + 1) % images.length;
+            images[currentIndex].classList.add('active');
+        }
+
+        setInterval(showNextImage, 3000);
+
+        // PDF section logic
+        const pdfData = {
+            pediatric: {
+                description: "Improving mobility and posture in children with movement disorders.",
+                conditions: ["Cerebral Palsy", "Developmental delay", "Spinal Muscular Atrophy", "Scoliosis", "Stroke and Cerebrovascular accident", "Respiratory Distress Syndrome", "Torticollis", "Juvenile Arthritis", "Autism"]
+            },
+            sports: {
+                description: "Helping athletes recover from sports-related injuries and improve performance.",
+                conditions: ["Rotator cuff strains", "Tennis elbow", "ACL injuries", "Meniscal tears", "Ankle sprains", "Achilles tendonitis", "Concussions", "Stress fractures", "Plantar fasciitis"]
+            },
+            hand: {
+                description: "Treatment for hand-related injuries and conditions affecting mobility.",
+                conditions: ["Finger Fractures", "Mallet Finger", "Trigger Finger", "Finger Dislocations", "Finger Sprains", "Thumb Fractures", "Thumb Sprains", "De Quervain’s Tenosynovitis", "Thumb Arthritis", "Wrist Fractures", "Wrist Sprains", "Wrist Tendinitis", "Carpal Tunnel Syndrome", "Dupuytren’s Contracture", "Hand Arthritis", "Ganglion Cysts", "Hand Tendinitis"]
+            },
+            cardio: {
+                description: "Physiotherapy for heart and vascular health improvement.",
+                conditions: ["Myocardial Infarction", "Angina", "Heart Failure", "Cardiomyopathy", "Heart Transplant", "Peripheral Artery Disease", "Deep Vein Thrombosis", "Varicose Veins", "Chronic Venous Insufficiency", "Hypertension", "Hyperlipidemia", "Diabetes", "Obesity", "Post-Coronary Artery Bypass Graft", "Post-Heart Valve Repair", "Post-Pacemaker Implantation"]
+            },
+            geriatrics: {
+                description: "Enhancing mobility, balance, and strength in elderly individuals.",
+                conditions: ["Osteoporosis", "Rheumatoid Arthritis", "Alzheimer’s disease", "Falls", "Incontinence", "Vertigo", "Muscle weakness", "Dementia", "Balance Disorders"]
+            },
+            neuro: {
+                description: "Helping individuals recover from brain and spinal cord injuries.",
+                conditions: ["Stroke", "Traumatic brain injury", "Parkinson’s disease", "Spinal cord injury", "Peripheral Neuropathy", "Guillain-Barre syndrome", "Multiple Sclerosis", "Motor Neuron disease", "Muscular dystrophy"]
+            },
+            obg: {
+                description: "Supporting women during pregnancy and postpartum recovery.",
+                conditions: ["Antenatal care", "Sciatica", "Diastasis Recti", "Caesarean Section Recovery", "Pelvic floor dysfunction", "Varicose veins", "Perineal trauma", "Urinary incontinence", "Pelvic Girdle pain"]
+            },
+            ortho: {
+                description: "Addressing musculoskeletal issues and rehabilitation.",
+                conditions: ["Low Back Pain", "Osteoarthritis", "Rotator cuff injuries", "Tennis Elbow", "Golfers Elbow", "Shoulder impingement", "Knee ligament Sprains", "Anterior Cruciate Ligament", "Meniscal injuries"]
+            }
+        };
+
+        const pdfSection = document.getElementById("pdf-section");
+        Object.entries(pdfData).forEach(([key, data]) => {
+            const box = document.createElement("div");
+            box.className = "pdf-box";
+            box.innerHTML = `<h3>${key.toUpperCase()}</h3><p>${data.description}</p><div class='conditions'><h4>Conditions Treated:</h4><ul>${data.conditions.map(c => `<li>${c}</li>`).join('')}</ul></div>`;
+            box.addEventListener('click', () => {
+                document.querySelectorAll('.pdf-box').forEach(b => { if (b !== box) { b.classList.remove('expanded'); }});
+                box.classList.toggle('expanded');
+            });
+            pdfSection.appendChild(box);
+        });
+
+        // Slider functionality
+        const slides = document.querySelector('.slides');
+        let slideWidth = document.querySelector('.slide').clientWidth;
+
+        function updateSlideWidth() {
+            slideWidth = document.querySelector('.slide').clientWidth;
+        }
+
+        window.addEventListener('resize', updateSlideWidth);
+
+        let currentSlide = 0;
+
+        document.querySelector('.next-slide').addEventListener('click', () => {
+            currentSlide = (currentSlide + 1) % slides.children.length;
+            slides.style.transform = `translateX(-${currentSlide * slideWidth}px)`;
+        });
+
+        document.querySelector('.prev-slide').addEventListener('click', () => {
+            currentSlide = (currentSlide - 1 + slides.children.length) % slides.children.length;
+            slides.style.transform = `translateX(-${currentSlide * slideWidth}px)`;
+        });
+
+        // Dr. Rekha Chitrada Profile Animation
+        document.addEventListener("DOMContentLoaded", function() {
+            setTimeout(() => {
+                document.getElementById("profile-info").classList.add("show");
+            }, 500);
+        });
+    </script>
+</body>
+</html>
